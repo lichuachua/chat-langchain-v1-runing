@@ -6,13 +6,13 @@ from parser import langchain_docs_extractor
 
 import weaviate
 from bs4 import BeautifulSoup, SoupStrainer
-from langchain.document_loaders import RecursiveUrlLoader, SitemapLoader
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.document_loaders import RecursiveUrlLoader, SitemapLoader
+from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.indexes import SQLRecordManager, index
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.utils.html import (PREFIXES_TO_IGNORE_REGEX,
                                   SUFFIXES_TO_IGNORE_REGEX)
-from langchain.vectorstores import Weaviate
+from langchain_community.vectorstores import Weaviate
 
 from constants import WEAVIATE_DOCS_INDEX_NAME
 
@@ -59,7 +59,7 @@ def simple_extractor(html: str) -> str:
 def load_api_docs():
     return RecursiveUrlLoader(
         url="https://api.python.langchain.com/en/latest/",
-        max_depth=8,
+        max_depth=2,
         extractor=simple_extractor,
         prevent_outside=True,
         use_async=True,
@@ -78,14 +78,14 @@ def load_api_docs():
 
 
 def ingest_docs():
-    docs_from_documentation = load_langchain_docs()
-    logger.info(f"Loaded {len(docs_from_documentation)} docs from documentation")
+    # docs_from_documentation = load_langchain_docs()
+    # logger.info(f"Loaded {len(docs_from_documentation)} docs from documentation")
     docs_from_api = load_api_docs()
     logger.info(f"Loaded {len(docs_from_api)} docs from API")
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
     docs_transformed = text_splitter.split_documents(
-        docs_from_documentation + docs_from_api
+        docs_from_api
     )
 
     # We try to return 'source' and 'title' metadata when querying vector store and

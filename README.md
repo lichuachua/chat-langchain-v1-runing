@@ -22,6 +22,9 @@ export LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
 export LANGCHAIN_API_KEY=
 export LANGCHAIN_PROJECT=
 ```
+可能需要【pip install weaviate-client】,其他的缺什么就pip install什么
+
+
 1. Run `python ingest.py` to ingest LangChain docs data into the Weaviate vectorstore (only needs to be done once).
    1. You can use other [Document Loaders](https://langchain.readthedocs.io/en/latest/modules/document_loaders.html) to load your own data into the vectorstore.
 1. Start the Python backend with `poetry run make start`.
